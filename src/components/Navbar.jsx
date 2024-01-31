@@ -34,7 +34,7 @@ const Navbar = () => {
                 Inicio
               </NavLink>
               <button onClick={handleClickLogout} className={classLogout}>
-                Logout
+                Cerrar Sesion
               </button>
             </>
           ) : (

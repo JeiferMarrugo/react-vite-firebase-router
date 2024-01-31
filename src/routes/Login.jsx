@@ -64,7 +64,7 @@ const Login = () => {
           <FormAlert error={errors.password} />
         </FormInput>
 
-        {loading ? <ButtonLoading /> : <Button text="Iniciar Sesion" />}
+        <Button text="Iniciar Sesion" type="submit" loading={loading}/>
       </form>
     </>
   );

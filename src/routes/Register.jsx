@@ -78,7 +78,7 @@ const Register = () => {
         >
           <FormAlert error={errors.repassword} />
         </FormInput>
-        {loading ? <ButtonLoading /> : <Button text="Registrar" />}
+        <Button text="Registrarme" type="submit" loading={loading}/>
       </form>
     </>
   );
