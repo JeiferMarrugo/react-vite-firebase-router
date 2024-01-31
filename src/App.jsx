@@ -1,4 +1,3 @@
-
 import { Route, Routes } from "react-router-dom";
 import RequireAuth from "./components/RequireAuth";
 import Home from "./routes/Home";
@@ -7,8 +6,9 @@ import Register from "./routes/Register";
 import Layout404 from "./routes/Layout404";
 import { UserContext } from "./context/UserProvider";
 import { useContext } from "react";
-import LayoutContainerForm from "./context/LayoutContainerForm";
+import LayoutContainerForm from "./layouts/LayoutContainerForm";
 import Navbar from "./components/Navbar";
+import LayoutRedirect from "./layouts/LayoutRedirect";
 
 const App = () => {
   const { user } = useContext(UserContext);
@@ -23,6 +23,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<RequireAuth />}>
           <Route index element={<Home />} />
+          <Route path="Perfil">{}</Route>
         </Route>
 
         <Route path="/" element={<LayoutContainerForm />}>
@@ -30,7 +31,9 @@ const App = () => {
           <Route path="/register" element={<Register />} />
         </Route>
 
-        <Route path="*" element={<Layout404 />} />
+        <Route path="/:nanoid" element={<LayoutRedirect />}>
+          <Route index element={<Layout404 />} />
+        </Route>
       </Routes>
     </>
   );

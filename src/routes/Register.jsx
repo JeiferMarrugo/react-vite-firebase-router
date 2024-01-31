@@ -9,7 +9,6 @@ import FormAlert from "../components/FormAlert";
 import FormInput from "../components/FormInput";
 import Title from "../components/Title";
 import Button from "../components/Button";
-import ButtonLoading from "../components/ButtonLoading";
 
 const Register = () => {
   const navegate = useNavigate();
@@ -52,6 +51,7 @@ const Register = () => {
             required,
             pattern: patternEmail,
           })}
+          error={errors.email}
         >
           <FormAlert error={errors.email} />
         </FormInput>
@@ -64,6 +64,7 @@ const Register = () => {
             minLength,
             validate: validateTrim,
           })}
+          error={errors.password}
         >
           <FormAlert error={errors.password} />
         </FormInput>
@@ -75,6 +76,7 @@ const Register = () => {
           {...register("repassword", {
             validate: validateEquals(getValues("password")),
           })}
+          error={errors.repassword}
         >
           <FormAlert error={errors.repassword} />
         </FormInput>

@@ -2,57 +2,81 @@ import { useEffect, useState } from "react";
 import Title from "../components/Title";
 import useFirestore from "../hooks/useFirestore";
 import Button from "../components/Button";
+import { formValidate } from "../utils/formValidate";
+import { useForm } from "react-hook-form";
+import FormInput from "../components/FormInput";
+import FormAlert from "../components/FormAlert";
+import { errorsFirebase } from "../utils/errorsFirebase";
 
 const Home = () => {
   const { data, error, loading, getData, addData, deleteData, updateData } =
     useFirestore();
-  const [text, setText] = useState("");
   const [newOriginID, setNewOriginID] = useState();
+  const { required, patternURL } = formValidate();
+  const [copy, setCopy] = useState({});
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    resetField,
+    setValue,
+    setError,
+  } = useForm();
 
   useEffect(() => {
-    console.log("getData");
     getData();
   }, []);
 
   if (loading.getData) return <p>Loading....</p>;
   if (error) return <p>{error}</p>;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (newOriginID) {
-      await updateData(newOriginID, text);
-      setNewOriginID("");
-      setText("");
-      return;
+  const onSubmit = async ({ url }) => {
+    try {
+      if (newOriginID) {
+        await updateData(newOriginID, url);
+        setNewOriginID("");
+      } else {
+        await addData(url);
+      }
+      resetField("url");
+    } catch (error) {
+      const { code, message } = errorsFirebase(error);
+      setError(code, { message });
     }
-
-    await addData(text);
-    setText("");
   };
 
   const handleDeleteData = async (nanoid) => {
-    console.log("click delete");
     await deleteData(nanoid);
   };
 
   const handleEditData = (item) => {
-    console.log("Click Edit");
-    setText(item.origin);
+    setValue("url", item.origin);
     setNewOriginID(item.nanoid);
+  };
+
+  const handleClickCopy = async (nanoid) => {
+    await navigator.clipboard.writeText(window.location.href + nanoid);
+    setCopy((prev) => ({ ...prev, nanoid }));
   };
 
   return (
     <>
       <Title title="Home" />
 
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Adjunte link"
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormInput
+          label="Ingrese URL"
+          placeholder="http://...."
           type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
+          {...register("url", {
+            required,
+            pattern: patternURL,
+          })}
+          error={errors.url}
+        >
+          <FormAlert error={errors.url} />
+        </FormInput>
 
         {newOriginID ? (
           <Button
@@ -72,26 +96,41 @@ const Home = () => {
       </form>
 
       {data.map((item) => (
-        <div key={item.nanoid}>
-          <p> {item.nanoid} </p>
-          <p> {item.origin} </p>
-          <p> {item.uid} </p>
+        <article
+          key={item.nanoid}
+          className="p-6 bg-white rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700 mb-3"
+        >
+          <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+            {window.location.href + item.nanoid}
+          </h5>
+          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            {item.origin}
+          </p>
+          <div className="flex space-x-2">
+            <Button
+              type="button"
+              text="Delete"
+              color="red"
+              loading={loading[item.nanoid]}
+              onClick={() => handleDeleteData(item.nanoid)}
+            />
+            <Button
+              type="button"
+              text="Edit"
+              color="yellow"
+              onClick={() => handleEditData(item)}
+            />
 
-          <Button
-            text="Eliminar"
-            type="button"
-            color="red"
-            loading={loading[item.nanoid]}
-            onClick={() => handleDeleteData(item.nanoid)}
-          />
-
-          <Button
-            text="Editar"
-            type="button"
-            color="lime"
-            onClick={() => handleEditData(item)}
-          />
-        </div>
+            <Button
+              type="button"
+              text={
+                copy?.nanoid === item.nanoid ? "Texto copiado!" : "Copiar Url"
+              }
+              color="indigo"
+              onClick={() => handleClickCopy(item.nanoid)}
+            />
+          </div>
+        </article>
       ))}
     </>
   );

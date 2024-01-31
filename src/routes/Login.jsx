@@ -9,7 +9,6 @@ import FormAlert from "../components/FormAlert";
 import FormInput from "../components/FormInput";
 import Title from "../components/Title";
 import Button from "../components/Button";
-import ButtonLoading from "../components/ButtonLoading";
 
 const Login = () => {
   const navegate = useNavigate();
@@ -49,6 +48,7 @@ const Login = () => {
             required,
             pattern: patternEmail,
           })}
+          error={errors.email}
         >
           <FormAlert error={errors.email} />
         </FormInput>
@@ -60,6 +60,7 @@ const Login = () => {
             minLength,
             validate: validateTrim,
           })}
+          error={errors.password}
         >
           <FormAlert error={errors.password} />
         </FormInput>
