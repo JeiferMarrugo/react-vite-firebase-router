@@ -1,31 +1,36 @@
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
+
+import { Route, Routes } from "react-router-dom";
+import RequireAuth from "./components/RequireAuth";
+import Home from "./routes/Home";
 import Login from "./routes/Login";
-import { useContext } from "react";
-import { UserContext } from "./context/UserProvider";
 import Register from "./routes/Register";
-import AccessContainer from "./components/AccessContainer";
+import Layout404 from "./routes/Layout404";
+import { UserContext } from "./context/UserProvider";
+import { useContext } from "react";
+import LayoutContainerForm from "./context/LayoutContainerForm";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   const { user } = useContext(UserContext);
 
   if (user === false) {
-    return (
-      <div className="d-flex align-items-center mt-3">
-        <strong role="status">Cargando Contenido...</strong>
-        <div className="spinner-border ms-auto" aria-hidden="true"></div>
-      </div>
-    );
+    return <p>Loading...</p>;
   }
 
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<AccessContainer />}>
+        <Route path="/" element={<RequireAuth />}>
+          <Route index element={<Home />} />
+        </Route>
+
+        <Route path="/" element={<LayoutContainerForm />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
+
+        <Route path="*" element={<Layout404 />} />
       </Routes>
     </>
   );

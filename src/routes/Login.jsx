@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
 import { formValidate } from "../utils/formValidate";
@@ -9,9 +9,11 @@ import FormAlert from "../components/FormAlert";
 import FormInput from "../components/FormInput";
 import Title from "../components/Title";
 import Button from "../components/Button";
+import ButtonLoading from "../components/ButtonLoading";
 
 const Login = () => {
   const navegate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const { loginUser } = useContext(UserContext);
   const { required, patternEmail, minLength, validateTrim } = formValidate();
 
@@ -24,17 +26,20 @@ const Login = () => {
 
   const onSubmit = async ({ email, password }) => {
     try {
+      setLoading(true);
       await loginUser(email, password);
       navegate("/");
     } catch (error) {
       const { code, message } = errorsFirebase(error);
       setError(code, { message });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
-    <Title title="Login" />
+      <Title title="Login" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           type="email"
@@ -58,8 +63,8 @@ const Login = () => {
         >
           <FormAlert error={errors.password} />
         </FormInput>
-        
-        <Button text="Iniciar Sesion" />
+
+        {loading ? <ButtonLoading /> : <Button text="Iniciar Sesion" />}
       </form>
     </>
   );
