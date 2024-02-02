@@ -95,10 +95,12 @@ const Home = () => {
         )}
       </form>
 
+      <br />
+
       {data.map((item) => (
         <article
           key={item.nanoid}
-          className="p-6 bg-white rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700 mb-3"
+          className="max-w p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-3"
         >
           <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
             {window.location.href + item.nanoid}
@@ -109,14 +111,14 @@ const Home = () => {
           <div className="flex space-x-2">
             <Button
               type="button"
-              text="Delete"
+              text="Eliminar"
               color="red"
               loading={loading[item.nanoid]}
               onClick={() => handleDeleteData(item.nanoid)}
             />
             <Button
               type="button"
-              text="Edit"
+              text="Editar"
               color="yellow"
               onClick={() => handleEditData(item)}
             />

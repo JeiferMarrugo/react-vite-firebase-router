@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
 import { errorsFirebase } from "../utils/errorsFirebase";
 import { formValidate } from "../utils/formValidate";
@@ -80,7 +80,15 @@ const Register = () => {
         >
           <FormAlert error={errors.repassword} />
         </FormInput>
-        <Button text="Registrarme" type="submit" loading={loading}/>
+
+        <Button text="Registrarme" type="submit" loading={loading} />
+
+        <Link
+          to="/login"
+          className="flex items-center space-x-3 mt-3 rtl:space-x-reverse text-blue-500 mb-3 justify-center"
+        >
+          Ya tienes una cuenta? Inicia Sesion
+        </Link>
       </form>
     </>
   );

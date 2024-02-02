@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Navigate, Outlet, useParams } from "react-router-dom";
 import useFirestore from "../hooks/useFirestore";
 import Title from "../components/Title";
+import { UserContext } from "../context/UserProvider";
 
 const LayoutRedirect = () => {
+  const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const { searchData } = useFirestore();
   const params = useParams();
@@ -17,6 +19,10 @@ const LayoutRedirect = () => {
       }
     });
   }, []);
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   if (loading) return <Title text="Cargando redirección..." />;
 

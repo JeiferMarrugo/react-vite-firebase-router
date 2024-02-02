@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
 import { formValidate } from "../utils/formValidate";
 import { useForm } from "react-hook-form";
@@ -65,7 +65,14 @@ const Login = () => {
           <FormAlert error={errors.password} />
         </FormInput>
 
-        <Button text="Iniciar Sesion" type="submit" loading={loading}/>
+        <Button text="Iniciar Sesion" type="submit" loading={loading} />
+
+        <Link
+          to="/register"
+          className="flex items-center space-x-3 mt-3 rtl:space-x-reverse text-blue-500 mb-3 text-center justify-center"
+        >
+          <p className="text-center">No tienes cuenta? Registrate</p>
+        </Link>
       </form>
     </>
   );
