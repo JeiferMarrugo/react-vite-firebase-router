@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import FormInput from "../components/FormInput";
 import FormAlert from "../components/FormAlert";
 import { errorsFirebase } from "../utils/errorsFirebase";
+import Swal from "sweetalert2";
 
 const Home = () => {
   const { data, error, loading, getData, addData, deleteData, updateData } =
@@ -34,10 +35,31 @@ const Home = () => {
   const onSubmit = async ({ url }) => {
     try {
       if (newOriginID) {
-        await updateData(newOriginID, url);
+        Swal.fire({
+          title: "Estas seguro de hacer este cambio?",
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: "Si",
+          denyButtonText: `No`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            await updateData(newOriginID, url);
+            Swal.fire("Saved!", "", "success");
+          } else if (result.isDenied) {
+            Swal.fire("Changes are not saved", "", "info");
+          }
+        });
+
         setNewOriginID("");
       } else {
         await addData(url);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Url guardada correctamente!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
       resetField("url");
     } catch (error) {
@@ -47,7 +69,21 @@ const Home = () => {
   };
 
   const handleDeleteData = async (nanoid) => {
-    await deleteData(nanoid);
+    Swal.fire({
+      title: "Estas seguro de borrar este elemento?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Si",
+      denyButtonText: `No`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteData(nanoid);
+        Swal.fire("Elemento eliminado correctamente!", "", "success");
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
+    
   };
 
   const handleEditData = (item) => {
