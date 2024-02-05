@@ -10,6 +10,9 @@ import { useContext } from "react";
 import LayoutContainerForm from "./layouts/LayoutContainerForm";
 import Navbar from "./components/Navbar";
 import LayoutRedirect from "./layouts/LayoutRedirect";
+import AddProduct from "./routes/AddProduct";
+import Tienda from "./routes/Tienda";
+import Scompra from "./components/Scompra";
 
 const App = () => {
   const { user } = useContext(UserContext);
@@ -29,7 +32,10 @@ const App = () => {
       <Routes>
         <Route path="/" element={<RequireAuth />}>
           <Route index element={<Home />} />
-          <Route path="Perfil" element={<Profile />}></Route>
+          <Route path="/Perfil" element={<Profile />} />
+          <Route path="/addProduct" element={<AddProduct />} />
+          <Route path="/Tienda" element={<Tienda />} />
+          <Route path="/Scompra" element={<Scompra />} />
         </Route>
 
         <Route path="/" element={<LayoutContainerForm />}>

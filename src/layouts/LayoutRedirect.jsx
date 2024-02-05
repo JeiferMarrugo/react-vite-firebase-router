@@ -24,7 +24,7 @@ const LayoutRedirect = () => {
     return <Navigate to="/login" />;
   }
 
-  if (loading) return <Title text="Cargando redirección..." />;
+  if (loading) return <Title title="Cargando redirección..." />;
 
   return <Outlet />;
 };

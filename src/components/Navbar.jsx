@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
 import MenuSvg from "../assets/svgMenu";
 import Equix from "../assets/Equix";
+import Drow from "../assets/Drow";
 
 const classNavLink =
   "block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent border-b-2 text-gray-800";
@@ -13,10 +14,15 @@ const classLogout =
 const ulClass =
   "items-center justify-center space-y-2 font-bold md:flex md:space-x-6 md:space-y-0";
 
+const buttonClass =
+  "flex items-center justify-between w-full py-2 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent";
+
 const Navbar = () => {
   const { user, logOutUser } = useContext(UserContext);
 
   const [navbar, setNavBar] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleClickLogout = async () => {
     try {
@@ -24,6 +30,10 @@ const Navbar = () => {
     } catch (error) {
       console.log(error.code);
     }
+  };
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -50,11 +60,7 @@ const Navbar = () => {
                 className="p-2 text-gray-700 rounded-md outline-none focus:border-gray-400 focus:border"
                 onClick={() => setNavBar(!navbar)}
               >
-                {navbar ? (
-                  <Equix />
-                ) : (
-                  <MenuSvg />
-                )}
+                {navbar ? <Equix /> : <MenuSvg />}
               </button>
             </div>
           </div>
@@ -75,9 +81,44 @@ const Navbar = () => {
                   <NavLink to="/perfil" className={classNavLink}>
                     Perfil
                   </NavLink>
-                  <NavLink to="/tienda" className={classNavLink}>
-                    Tienda
+
+                  <NavLink className={classNavLink}>
+                    <div className="relative">
+                      <button
+                        id="dropdownNavbarLink"
+                        onClick={toggleDropdown}
+                        className={buttonClass}
+                      >
+                        Carrito de compras
+                        <Drow />
+                      </button>
+                      <div
+                        className={`dropdown-menu ${
+                          isOpen ? "block" : "hidden"
+                        } absolute right-0 mt-2 w-full md:w-auto`}
+                      >
+                        <ul
+                          className="text-sm px-2 text-gray-700 dark:text-gray-400"
+                          aria-labelledby="dropdownLargeButton"
+                        >
+                          <NavLink
+                            to="/addProduct"
+                            className="block px-2 py-2 border-b border-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          >
+                            Agregar Producto
+                          </NavLink>
+
+                          <NavLink
+                            to="/Tienda"
+                            className="block px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          >
+                            Tienda
+                          </NavLink>
+                        </ul>
+                      </div>
+                    </div>
                   </NavLink>
+
                   <NavLink
                     onClick={handleClickLogout}
                     className={classLogout}
